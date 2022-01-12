@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Get your food delivered fast. Jidi, food you can trust">
+<meta name="author" content="Pywe">
+<title>Jidi | Food you can trust</title>
+
+<link rel="icon" type="image/png" href="https://jidi.pywe.org/static/images/1.png">
+
+<link href="https://jidi.pywe.org/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="https://jidi.pywe.org/static/vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+
+<link href="https://jidi.pywe.org/static/vendor/icons/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
+
+<link href="https://jidi.pywe.org/static/vendor/slick-master/slick/slick.css" rel="stylesheet" type="text/css">
+
+<link href="https://jidi.pywe.org/static/vendor/lightgallery-master/dist/css/lightgallery.min.css" rel="stylesheet">
+
+<link href="https://jidi.pywe.org/static/vendor/select2/css/select2-bootstrap.css" />
+<link href="https://jidi.pywe.org/static/vendor/select2/css/select2.min.css" rel="stylesheet">
+
+<link href="https://jidi.pywe.org/static/css/style.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    #error-message{
+        padding:5px;
+        border-radius:15px;
+        color:white;
+    }
+    #success-message{
+        padding:5px;
+        border-radius:15px;
+        color:white;
+    }
+    #submit-btn{
+        background-color:#f9c923 !important;
+        color:black !important;
+    }
+    .button{
+        background-color:#f9c923 !important;
+        color:black !important;
+    }
+</style>
+<script>
+     function closeWindow() {
+        window.open('','_parent','');
+        window.close();
+    }
+</script>
+</head>
+   <body>
+      <div class="bg-white">
+         <div class="container">
+            <div class="row justify-content-center align-items-center d-flex vh-100">
+               <div class="col-lg-4 mx-auto">
+                  <div class="osahan-login py-4">
+                     <div class="text-center mb-4">
+                        <a href="javascript:void(0);">
+                            <!--<img src="https://jidi.pywe.org/static/images/1.png" alt="">-->
+                            <h2 style="color:red">HealthNow</h2>
+                            </a>
+                        <h5 class="font-weight-bold mt-3">Topup HeealthNow Account for {{user.first_name}} {{user.last_name}}</h5>
+                        <p class="text-muted">Pay safely with our payment Platform, all given information is not saved but used to process the payment only.</p>
+                        <br>
+                        <p id="info-message" hidden></p>
+                        <p id="success-message" hidden>Please give accurate information about the Gig to buyers.</p>
+                        <p id="error-message" hidden>Please give accurate information about the Gig to buyers.</p>
+
+                     </div>
+                     <form id="login-form" action="#" method="dialog">
+                        <div class="form-group">
+                           <label class="mb-1">Transaction ID</label>
+                           <div class="position-relative icon-form-control">
+                              <i class="mdi mdi-account position-absolute"></i>
+                              <input type="text" value="{{transaction_id}}" name="transaction_id" class="form-control" required="required" disabled>
+                           </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-1">Your Email</label>
+                            <div class="position-relative icon-form-control">
+                               <i class="mdi mdi-email position-absolute"></i>
+                               <input type="email" value="{{user.email}}" id="email" name="email" class="form-control" required="required">
+                            </div>
+                         </div>
+                         <div class="form-group">
+                            <label class="mb-1">Your Phone</label>
+                            <div class="position-relative icon-form-control">
+                               <i class="mdi mdi-phone position-absolute"></i>
+                               <input type="tel" value="{% if user.phone %}{{user.phone}}{% endif %}" id="phone" name="phone" class="form-control" required="required">
+                            </div>
+                         </div>
+                        <div class="form-group">
+                           <label class="mb-1">Amount (in GHC not less than 5)</label>
+                           <div class="position-relative icon-form-control">
+                              <i class="mdi mdi-coins position-absolute"></i>
+                              <input step="any" min="5" type="number" id="amount" name="amount" class="form-control" required="required">
+                           </div>
+                        </div>
+                        <input type="password" id="next" name="next" class="form-control" hidden>
+                         <input type="text" id="username" name="username" class="form-control" value="{{user.username}}" hidden>
+                        <button class="btn btn-block text-uppercase" id="submit-btn" type="submit"> Continue </button>
+                     </form>
+                     <div class="text-center">
+                        <a id='payment' class="btn btn-dark ttlr_inline"
+                            data-APIKey="{{zanzama}}"
+                            data-transid="{{transaction_id}}"
+                            data-amount="10"
+                            data-customer_email="{{user.email}}"
+                            data-currency="GHS"
+                            data-redirect_url="#"
+                            data-pay_button_text="Topup Account"
+                            data-custom_description="HealthNow App"
+                            data-payment_method="both">
+                        </a>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="toast"></div>
+ <!-- <script data-cfasync="false" src="https://askbootstrap.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://jidi.pywe.org/static/vendor/jquery/jquery.min.js" type="f6fef5ac5b6be38762820aa3-text/javascript"></script> -->
+<script src="https://pharst.pywe.org/static/js/jquery.min.js"></script>
+<script src="https://pharst.pywe.org/static/js/axios.min.js"></script>
+<script src="https://jidi.pywe.org/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://askbootstrap.com/"></script>
+<script src="https://askbootstrap.com/"></script>
+<script src="https://jidi.pywe.org/static/vendor/slick-master/slick/slick.js"></script>
+<script src="https://jidi.pywe.org/static/vendor/lightgallery-master/dist/js/lightgallery-all.min.js"></script>
+<script src="https://jidi.pywe.org/static/vendor/select2/js/select2.min.js"></script>
+<script src="https://jidi.pywe.org/static/js/custom.js"></script>
+<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js" data-cf-settings="f6fef5ac5b6be38762820aa3-|49" defer=""></script>
+<script>
+     jQuery.loadScript = function (url, callback) {
+        jQuery.ajax({
+            url: url,
+            dataType: 'script',
+            success: callback,
+            async: true
+        });
+    }
+
+//   var url_string = window.location.href;
+//   var url = new URL(url_string);
+//   var next = url.searchParams.get("next") || "/gigs/complete-order/";
+//   var amount = url.searchParams.get("amount") || "0";
+//   var type = url.searchParams.get("type") || "payment";
+//   $("#next").val(next);
+//   $("#amount").val(amount);
+   function exists(ele){if (ele !== null && ele !== undefined && ele !== "null"){return true}else{return false}};
+   function toast(msg,time) {
+   var x = document.getElementById("toast");
+   x.innerHTML = msg;
+   x.className = "show";
+   setTimeout(function(){ x.className = x.className.replace("show", ""); }, time);
+   }
+   function setNext(){
+        var url_string = window.location.href; //window.location.href
+        var url = new URL(url_string);
+        // var myParam = url.searchParams.get("next") || "/gigs/complete-order/";
+        // if(exists(myParam)){
+        //     document.getElementById("cancel").href = myParam;
+        //     localStorage.setItem("next",myParam);
+        // }
+        // return myParam || window.location.origin;
+    }
+   function buildForm(id){
+               let myForm = document.getElementById(id);
+               let formData = new FormData(myForm);
+               //This will build the form from name, value pairs
+                   var obj = {}
+                   var all = []
+                   for(var pair of formData.entries()){
+                       var name = pair[0]
+                       var val = pair[1]
+                       obj[name]=val
+                   }
+                   return obj
+           }
+    $('#login-form').on('submit', function () {
+        var form = buildForm("login-form");
+        console.log(form);
+        $("#info-message").attr('hidden',true);
+        $("#error-message").attr('hidden',true);
+        $("#success-message").attr('hidden',true);
+        $("#submit-btn").html(`Please wait...`);
+        var amount = $("#amount").val();
+        localStorage.setItem("amount",amount);
+        $("#payment").attr('data-amount',amount);
+         $("#payment").attr('data-customer_email',form.email);
+
+         $("#payment").attr('data-redirect_url',window.location.href)
+        if (typeof someObject == 'undefined') $.loadScript('https://prod.theteller.net/checkout/resource/api/inline/theteller_inline.js', function(){
+          //Stuff to do after someScript has loaded
+        //   console.log("let's opay now")
+          document.getElementById("login-form").style.display = "none";
+        //   document.getElementById("stop-payment").style.display = "block";
+        //   document.getElementById("await-payment").style.display = "none"
+        });
+    });
+   function verifyPayment(form){
+    // toast("Verifying topup...",5000)
+    console.log(form)
+    axios.post('/api/v1/system/verify-payment/',form)
+      .then(function (response) {
+
+        var data = response.data
+        if(response.data.success){
+    //   make a post request to caller site now
+    // create a new object to post to caller site
+    $("#info-message").attr('hidden',true);
+    $("#success-message").attr('hidden',false);
+    $("#success-message").html(`Success: Topup successfully gone through, amount added to your wallet. You can now close thise page. Thank you!`);
+     setTimeout(() => {
+        closeWindow();
+     }, 3000);
+    // var formToPost = {
+    //     amount:form.amount,
+    //     email:form.email,
+    //     phone:form.phone,
+    //     success:"true",
+    //     reason:"Transaction was successful",
+    //     id:form.transaction_id
+    // }
+    // if(exists(form.order_id)){
+    //      formToPost.order_id = form.order_id
+    // }else{
+    //     delete formToPost.order_id
+    // }
+    // post(setNext(),formToPost)
+            // window.location = setNext();
+    }else{
+         console.log(response);
+            // toast(response.data.message,5000);
+            $("#submit-btn").html(`Continue`);
+            $("#amount").val(form.amount);
+            document.getElementById("login-form").style.display = "block";
+            $("#info-message").attr('hidden',true);
+            $("#error-message").attr('hidden',false);
+            $("#error-message").html(`Error: ${response.data.message}`);
+        // var formToPost = {
+        // amount:form.amount,
+        // email:form.email,
+        // phone:form.phone,
+        // success:"false",
+        // reason:"Transaction was not successful",
+        // id:form.transaction_id
+        // }
+    //  if(exists(form.order_id)){
+    //      formToPost.order_id = form.order_id
+    // }else{
+    //     delete formToPost.order_id
+    // }
+        // post(setNext(),formToPost)
+            // alert(data.message);
+
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        // toast("Sorry, an error occured",5000);
+        if (exists(error.response)){
+        console.log(error.response.data);
+        }
+      });
+}
+function getTransid(){
+        var url_string = window.location.href; //window.location.href
+        var url = new URL(url_string);
+        var myParam = url.searchParams.get("transaction_id");
+        var phone = $("#phone").val();
+        var email = $("#email").val();
+        var username = $("#username").val();
+
+        if(exists(myParam)){
+            var amount = localStorage.getItem("amount");
+            var order_id = localStorage.getItem("order_id");
+           var myform = {transaction_id:myParam,phone:phone,email:email,order_id:order_id,amount:amount,username:username}
+        //   tell the user we are verifying payment, so they should wait
+        document.getElementById("login-form").style.display = "none";
+        $("#info-message").attr('hidden',false);
+        $("#info-message").html(`Please do not close the page, we are processing the payment. Thank you!<br>
+            <div class="alert alert-info text-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p>Processing...</p>
+                                    </div>`)
+            if(exists(myform.order_id)){
+                 myform.order_id = myform.order_id
+            }else{
+                delete myform.order_id
+            }
+           verifyPayment(myform);
+
+        }else{
+            // if transaction id does not exist
+            console.log("{{transaction_id}}")
+            var order_id =url.searchParams.get("order_id");
+            localStorage.setItem("order_id",order_id)
+            // setNext()
+        }
+    }
+    getTransid();
+    function post(path, params, method='post') {
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    const form = document.createElement('form');
+    form.method = method;
+    form.action = path;
+
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = key;
+        hiddenField.value = params[key];
+
+        form.appendChild(hiddenField);
+      }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+</script>
+<!--<script src="https://js.paystack.co/v1/inline.js"></script>-->
+</body>
+</html>
